@@ -18,6 +18,11 @@ const Route = use('Route')
 
 Route.group(() => {
 
+    // Videos
+    Route.get('/movies', 'VideoController.index')
+    Route.get('/movies/popular', 'VideoController.popular')
+    Route.get('/movies/trending', 'VideoController.trending') 
+
     Route.post('login', 'AuthController.login').as('loginJwt')
     Route.post('register', 'AuthController.register').as('registerJwt')
 
