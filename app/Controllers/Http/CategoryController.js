@@ -2,7 +2,6 @@
 
 class CategoryController {
   async index ({ request, response, view }) {
-    akajldjaldjaldjalj
   }
 }
 
