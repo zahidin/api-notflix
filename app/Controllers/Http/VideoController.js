@@ -31,6 +31,15 @@ class VideoController {
         response.json(dataCategory)
     }
 
+    async search({ request, response, params }) {
+        let search = request.input('search')
+        const search = await Database
+            .table('videos')
+            .where('title', 'like', '%'+search+'%')
+
+        response.json(search)
+    }
+
     async insert({request, response, params}){
         
         try{
