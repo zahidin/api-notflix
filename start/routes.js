@@ -20,6 +20,11 @@ Route.group(() => {
     Route.get('movie/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
     Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
 
+    // Videos
+    Route.get('/movies', 'VideoController.index')
+    Route.get('/movies/popular', 'VideoController.popular')
+    Route.get('/movies/trending', 'VideoController.trending') 
+
     Route.post('login', 'AuthController.login').as('loginJwt')
     Route.post('register', 'AuthController.register').as('registerJwt')
 
