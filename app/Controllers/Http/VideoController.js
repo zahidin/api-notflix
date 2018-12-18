@@ -1,6 +1,21 @@
 'use strict'
 
+const Database = use('Database')
+const ModelVideo = use('App/Models/Video')
+
 class VideoController {
+
+    async getCategory ({ request,params, response }) {
+        // const dataCategory = await Database.table('videos').innerJoin('categories','videos.category_id','categories.id').where('videos.id', params.id)
+        const dataCategory = await Database.select('videos.*','categories.title as category_title').from('videos').innerJoin('categories','videos.category_id','categories.id').where('videos.id', params.id)
+        response.json(dataCategory)
+    }
+
+    async getSeries ({ request,params, response }) {
+        const dataSeries = await Database.select('videos.*','series.title as series_title').from('videos').innerJoin('series','videos.category_id','series.id').where('videos.id', params.id)
+        response.json(dataSeries)
+    }
+  
 }
 
 module.exports = VideoController

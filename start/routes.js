@@ -17,6 +17,8 @@
 const Route = use('Route')
 
 Route.group(() => {
+    Route.get('movie/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
+    Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
 
     Route.post('login', 'AuthController.login').as('loginJwt')
     Route.post('register', 'AuthController.register').as('registerJwt')
