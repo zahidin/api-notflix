@@ -20,15 +20,23 @@ Route.group(() => {
 
     // Videos
     Route.get('movies', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])
+    Route.get('movie/:id', 'VideoController.show').as('showMovie').middleware(['auth:jwt'])
     Route.get('movies/popular', 'VideoController.popular').as('getPopuler').middleware(['auth:jwt'])
     Route.get('movies/trending', 'VideoController.trending').as('getTrending').middleware(['auth:jwt'])
-    Route.get('movie/category/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
-    Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
-    Route.get('/movies/:id', 'VideoController.idvideo').as('showMovie')
+    // Route.get('movie/category/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
+    // Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
+
+    Route.post('addmovie', 'VideoController.insert').as('addMovie')
 
 
+    // Users
+    Route.get('profile', 'UserController.getProfile').as('getProfile').middleware(['auth:jwt'])    
+
+    //Auth    
     Route.post('login', 'AuthController.login').as('login')
-    Route.post('register', 'AuthController.register').as('register')
+    Route.post('register','AuthController.register').as('register')
+    Route.post('logout','AuthController.logout').as('logout').middleware(['auth'])
+
 
 }).prefix('api/v1')
 

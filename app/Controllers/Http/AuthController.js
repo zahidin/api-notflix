@@ -24,6 +24,12 @@ class AuthController {
         }
     }
 
+    async logout({auth,response}){
+        const apiToken = auth.getAuthHeader()
+        await auth.authenticator('jwt').revokeTokens([apiToken])
+        response.json({success:true,message:"Logout success"})
+    }
+
     async register({request,response}){
         try{
             const checkUser = await ModelUser.findBy('email',request.input('email'))
