@@ -24,6 +24,14 @@ class VideoController {
         const videosTrend = await Database.table('videos').where('is_trending', '1');
 
         response.json(videosTrend)
+
+    }
+
+    async idvideo ({request, response, params}) {
+        let id = params.id;
+        const videoID = await Database.table('videos').where('id', params.id);
+
+        response.json(videoID)
     }
 
     async getCategory ({ request,params, response }) {
