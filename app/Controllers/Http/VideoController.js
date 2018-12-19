@@ -1,15 +1,16 @@
 'use strict'
 
 const Database = use('Database')
+const Redis = use('Redis')
 const ModelVideo = use('App/Models/Video')
 
 class VideoController {
 
-    async index({request, response}) {
+    async index({request,response}) {
 
-        const videos = await Database.table('videos').select('*');
-        response.json(videos)
-
+        // const videos = await Database.table('videos').select('*');
+        const dataCategory = await Database.select('videos.*','categories.title as category_title','series.title as series_title').from('videos').innerJoin('categories','videos.category_id','categories.id').innerJoin('series','videos.series_id','series.id')
+        response.json(dataCategory)    
     }
 
     async popular({request, response}) {
@@ -29,6 +30,40 @@ class VideoController {
 
         const dataCategory = await Database.select('videos.*','categories.title as category_title','series.title as series_title').from('videos').innerJoin('categories','videos.category_id','categories.id').innerJoin('series','videos.series_id','series.id').where('videos.id', params.id)
         response.json(dataCategory)
+    }
+
+    async cache({request, response}){
+        // blm kelar
+        const cachedMovies = await Redis.get('videos')
+        // const cachedMoviesTrending = await Redis.get('trending')
+        // const cachedMoviesPopular = await Redis.get('popular')
+        if(cachedMovies){
+            return JSON.parse(cachedMovies)
+        }
+
+        const movies = await Database.select('videos.*','categories.title as category_title','series.title as series_title').from('videos').innerJoin('categories','videos.category_id','categories.id').innerJoin('series','videos.series_id','series.id')
+        let videosPop = await Database.table('videos').where('is_popular', '1');
+        videosPop = JSON.stringify(videosPop)
+        let videosTrend = await Database.table('videos').where('is_trending', '1');
+        videosTrend = JSON.stringify(videosTrend)
+        const all = `{"popular":${videosPop},"trending":${videosTrend}}`
+
+        // await Redis.set('videos',JSON.stringify(all),'EX',600000)   
+        await Redis.set('videos',JSON.stringify(all),'EX',300000)   
+        // await Redis.set('popular',JSON.stringify(videosPop))
+        // await Redis.set('trending',JSON.stringify(videosTrend))
+        return all
+    }
+
+    async search({request,params,response}){
+        let req = params.search
+        console.log(req)
+
+        // let dataSearch = await ModelVideo.query().where('title', 'like', '%' + req + '%')
+        //     .orWhere('vide_embed', 'like', '%' + req + '%').fetch()
+
+        // const dataSearch = await Database.raw("select * from videos where title like %?%",[request.get('search')])
+        response.json(req)
     }
 
     async insert({request, response, params}){

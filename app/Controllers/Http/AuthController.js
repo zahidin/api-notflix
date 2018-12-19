@@ -27,6 +27,9 @@ class AuthController {
     async logout({auth,response}){
         const apiToken = auth.getAuthHeader()
         await auth.authenticator('jwt').revokeTokens([apiToken])
+        // const user = auth.current.user
+        // const token = auth.getAuthHeader()
+        // await user.tokens().where('token',token).update({is_revoked:true})
         response.json({success:true,message:"Logout success"})
     }
 

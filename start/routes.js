@@ -20,9 +20,12 @@ Route.group(() => {
 
     // Videos
     Route.get('movies', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])
+    Route.get('movies/cached', 'VideoController.cache').as('getMovieCache').middleware(['auth:jwt'])
     Route.get('movie/:id', 'VideoController.show').as('showMovie').middleware(['auth:jwt'])
     Route.get('movies/popular', 'VideoController.popular').as('getPopuler').middleware(['auth:jwt'])
     Route.get('movies/trending', 'VideoController.trending').as('getTrending').middleware(['auth:jwt'])
+    // Route.get('movies/search', 'VideoController.search').middleware(['auth:jwt'])
+    Route.get('movies/:search?', 'VideoController.search').as('search').middleware(['auth:jwt'])
     // Route.get('movie/category/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
     // Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
 
@@ -31,6 +34,9 @@ Route.group(() => {
 
     // Users
     Route.get('profile', 'UserController.getProfile').as('getProfile').middleware(['auth:jwt'])    
+    Route.get('islogged', 'UserController.isLoggin').as('checkLogin') 
+    
+    Route.post('profile/changepassword','UserController.changePassword').as('changePassword').middleware(['auth:jwt'])
 
     //Auth    
     Route.post('login', 'AuthController.login').as('login')
