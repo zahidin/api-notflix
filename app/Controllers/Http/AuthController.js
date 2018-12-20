@@ -1,4 +1,4 @@
-'use strict'
+'use strict'    
 
 const ModelUser = use('App/Models/User')
 const { validate } = use('Validator')
@@ -23,7 +23,6 @@ class AuthController {
             response.json({success:false,message:e.message})
         }
     }
-
     async logout({auth,response}){
         const apiToken = auth.getAuthHeader()
         await auth.authenticator('jwt').revokeTokens([apiToken])

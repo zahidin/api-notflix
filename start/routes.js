@@ -20,16 +20,18 @@ Route.group(() => {
 
     // Videos
     Route.get('movies', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])
-    Route.get('movies/cached', 'VideoController.cache').as('getMovieCache').middleware(['auth:jwt'])
+    Route.get('movies/cached', 'VideoController.cache').as('getMovieCache')
+    Route.get('movies/cached/featured', 'VideoController.cacheFeatured').as('getMovieCacheFeatured')
+    Route.get('movies/cached/trending', 'VideoController.cacheTrending').as('getMovieCacheTrending')
+    Route.get('movies/cached/popular', 'VideoController.cachePopular').as('getMovieCachePopular')
     Route.get('movie/:id', 'VideoController.show').as('showMovie').middleware(['auth:jwt'])
     Route.get('movies/popular', 'VideoController.popular').as('getPopuler').middleware(['auth:jwt'])
     Route.get('movies/trending', 'VideoController.trending').as('getTrending').middleware(['auth:jwt'])
-    // Route.get('movies/search', 'VideoController.search').middleware(['auth:jwt'])
-    Route.get('movies/:search?', 'VideoController.search').as('search').middleware(['auth:jwt'])
+    Route.get('movies/search', 'VideoController.search').as('search').middleware(['auth:jwt'])
     // Route.get('movie/category/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
     // Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
 
-    Route.post('addmovie', 'VideoController.insert').as('addMovie')
+    // Route.post('addmovie', 'VideoController.insert').as('addMovie')
 
 
     // Users

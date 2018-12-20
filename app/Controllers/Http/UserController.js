@@ -1,6 +1,7 @@
 'use strict'
 
 const Database = use('Database')
+const ModelUser = use('App/Models/Token')
 const Hash = use('Hash')
 class UserController {
 
@@ -11,10 +12,9 @@ class UserController {
 
     async isLoggin({auth,request,response}){
         const user = await auth.getUser()
-        if(user){
-            response.json({success:true,message:"User is login"})
-        }else{
-            response.json({success:false,message:"User not login"})
+        const revoked = await Database.table('tokens').where('user_id',user.id).orderBy('id','desc').limit('1')
+        if(revoked[0].is_revoked != 0){
+            response.json({success:false,message:'Login First'})
         }
     }
 
