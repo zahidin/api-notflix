@@ -32,10 +32,10 @@ class MovieController {
     }
 
     async search({ request, response, params }) {
-        let search = request.input('q')
+        let q = request.input('q')
         const search = await Database
             .table('movies')
-            .where('title', 'like', '%'+search+'%')
+            .where('title', 'like', '%'+q+'%')
 
         response.json(search)
     }
