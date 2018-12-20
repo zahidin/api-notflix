@@ -17,17 +17,27 @@
 const Route = use('Route')
 
 Route.group(() => {
+    // Movie
+    Route.get('movies', 'MovieController.index').as('getAllMovie').middleware(['auth:jwt'])
+    Route.get('movies/cached', 'MovieController.cache').as('getMovieCache')
+    Route.get('movies/cached/featured', 'MovieController.cacheFeatured').as('getMovieCacheFeatured')
+    Route.get('movies/cached/trending', 'MovieController.cacheTrending').as('getMovieCacheTrending')
+    Route.get('movies/cached/popular', 'MovieController.cachePopular').as('getMovieCachePopular')
+    Route.get('movie/:id', 'MovieController.show').as('showMovie').middleware(['auth:jwt'])
+    Route.get('movies/popular', 'MovieController.popular').as('getPopuler').middleware(['auth:jwt'])
+    Route.get('movies/trending', 'MovieController.trending').as('getTrending').middleware(['auth:jwt'])
+    Route.get('movies/search', 'MovieController.search').as('search').middleware(['auth:jwt'])
 
     // Videos
-    Route.get('movies', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])
-    Route.get('movies/cached', 'VideoController.cache').as('getMovieCache')
-    Route.get('movies/cached/featured', 'VideoController.cacheFeatured').as('getMovieCacheFeatured')
-    Route.get('movies/cached/trending', 'VideoController.cacheTrending').as('getMovieCacheTrending')
-    Route.get('movies/cached/popular', 'VideoController.cachePopular').as('getMovieCachePopular')
-    Route.get('movie/:id', 'VideoController.show').as('showMovie').middleware(['auth:jwt'])
-    Route.get('movies/popular', 'VideoController.popular').as('getPopuler').middleware(['auth:jwt'])
-    Route.get('movies/trending', 'VideoController.trending').as('getTrending').middleware(['auth:jwt'])
-    Route.get('movies/search', 'VideoController.search').as('search').middleware(['auth:jwt'])
+    // Route.get('videos', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])
+    // Route.get('videos/cached', 'VideoController.cache').as('getMovieCache')
+    // Route.get('videos/cached/featured', 'VideoController.cacheFeatured').as('getMovieCacheFeatured')
+    // Route.get('videos/cached/trending', 'VideoController.cacheTrending').as('getMovieCacheTrending')
+    // Route.get('videos/cached/popular', 'VideoController.cachePopular').as('getMovieCachePopular')
+    // Route.get('video/:id', 'VideoController.show').as('showMovie').middleware(['auth:jwt'])
+    // Route.get('videos/popular', 'VideoController.popular').as('getPopuler').middleware(['auth:jwt'])
+    // Route.get('videos/trending', 'VideoController.trending').as('getTrending').middleware(['auth:jwt'])
+    // Route.get('videos/search', 'VideoController.search').as('search').middleware(['auth:jwt'])
     // Route.get('movie/category/:id', 'VideoController.getCategory').as('getCategory').middleware(['auth:jwt'])
     // Route.get('movie/series/:id', 'VideoController.getSeries').as('getSeries').middleware(['auth:jwt'])
 

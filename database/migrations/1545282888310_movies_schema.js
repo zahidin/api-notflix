@@ -8,7 +8,8 @@ class MoviesSchema extends Schema {
     this.create('movies', (table) => {
       table.increments()
       table.string('title',200)
-      table.string('start',200)
+      table.string('genre',200)
+      table.string('stars',200)
       table.string('director',200)
       table.text('sinopsis')
       table.string('rating',200)
