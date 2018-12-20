@@ -18,15 +18,19 @@ const Route = use('Route')
 
 Route.group(() => {
     // Movie
-    Route.get('movies', 'MovieController.index').as('getAllMovie').middleware(['auth:jwt'])
+    Route.get('movies', 'MovieController.index').as('getAllMovie')
     Route.get('movies/cached', 'MovieController.cache').as('getMovieCache')
-    Route.get('movies/cached/featured', 'MovieController.cacheFeatured').as('getMovieCacheFeatured')
-    Route.get('movies/cached/trending', 'MovieController.cacheTrending').as('getMovieCacheTrending')
-    Route.get('movies/cached/popular', 'MovieController.cachePopular').as('getMovieCachePopular')
-    Route.get('movie/:id', 'MovieController.show').as('showMovie').middleware(['auth:jwt'])
-    Route.get('movies/popular', 'MovieController.popular').as('getPopuler').middleware(['auth:jwt'])
-    Route.get('movies/trending', 'MovieController.trending').as('getTrending').middleware(['auth:jwt'])
-    Route.get('movies/search', 'MovieController.search').as('search').middleware(['auth:jwt'])
+    Route.get('movies/cached/featured/:limit', 'MovieController.cacheFeatured').as('getMovieCacheFeatured')
+    Route.get('movies/cached/trending/:limit', 'MovieController.cacheTrending').as('getMovieCacheTrending')
+    Route.get('movies/cached/popular/:limit', 'MovieController.cachePopular').as('getMovieCachePopular')
+    Route.get('movie/:id', 'MovieController.show').as('showMovie')
+    Route.get('movies/popular/:limit', 'MovieController.popular').as('getPopuler')
+    Route.get('movies/trending/:limit', 'MovieController.trending').as('getTrending')
+    Route.get('movies/search', 'MovieController.search').as('search')
+    Route.get('movies/categories', 'MovieController.allCategory').as('categories')
+    Route.get('movies/:category/:limit', 'MovieController.movieCategory').as('movieCategory')
+
+
 
     // Videos
     // Route.get('videos', 'VideoController.index').as('getAllMovie').middleware(['auth:jwt'])

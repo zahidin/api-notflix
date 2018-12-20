@@ -12,15 +12,14 @@ class MovieController {
         response.json(movies)    
     }
 
-    async popular({request, response}) {
-
-        const moviesPop = await Database.table('movies').orderBy('views','asc').limit('4');
+    async popular({request, response,params}) {
+        const moviesPop = await Database.table('movies').orderBy('views','asc').limit(`${params.limit}`);
         response.json(moviesPop)
     }
 
-    async trending({request, response}) {
+    async trending({request, response,params}) {
 
-        const moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit('4');
+        const moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit(`${params.limit}`);
         response.json(moviesTrend)
 
     }
@@ -41,8 +40,18 @@ class MovieController {
         response.json(search)
     }
 
-    async cache({request, response}){
+    async allCategory({request,response}){
+        const dataCategory = await Database.table('movies').distinct('genre').orderBy('genre','asc')
+        response.json(dataCategory)
+    }
 
+    async movieCategory({request,response,params}){
+        const dataMovieCategory = await Database.table('movies').where('genre',`${params.category}`).limit(`${params.limit}`)
+        response.json(dataMovieCategory)
+    }
+
+    async cache({request, response,params}){
+        console.log(params.limit)
         const cachedMovies = await Redis.get('movies')
         // const cachedMoviesTrending = await Redis.get('trending')
         // const cachedMoviesPopular = await Redis.get('popular')
@@ -50,11 +59,11 @@ class MovieController {
             return JSON.parse(cachedMovies)
         }
         // const movies = await Database.select('movies.*','categories.title as category_title','series.title as series_title').from('movies').innerJoin('categories','movies.category_id','categories.id').innerJoin('series','movies.series_id','series.id')
-        let moviesFeatured = await Database.table('movies').where('rating', 'like', '%8,%').limit('3')
+        let moviesFeatured = await Database.table('movies').where('rating', 'like', '%8,%').limit(`${params.limit}`)
         moviesFeatured = JSON.stringify(moviesFeatured)
-        let moviesPop = await Database.table('movies').orderBy('views','asc').limit('4');
+        let moviesPop = await Database.table('movies').orderBy('views','asc').limit(`${params.limit}`);
         moviesPop = JSON.stringify(moviesPop)
-        let moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit('4');
+        let moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit(`${params.limit}`);
         moviesTrend = JSON.stringify(moviesTrend)
         const all = `{"featured":${moviesFeatured},"popular":${moviesPop},"trending":${moviesTrend}}`
 
@@ -65,37 +74,37 @@ class MovieController {
         response.json(all)
     }
 
-    async cacheFeatured({request,response}){
+    async cacheFeatured({request,response,params}){
         const cachedFeatured = await Redis.get('featured')
         if(cachedFeatured){
             return JSON.parse(cachedFeatured)
         }
-        let moviesFeatured = await Database.table('movies').where('rating', 'like', '%8,%').limit('3')
+        let moviesFeatured = await Database.table('movies').where('rating', 'like', '%8,%').limit(`${params.limit}`)
         moviesFeatured = JSON.stringify(moviesFeatured)
         await Redis.set('featured',JSON.stringify(moviesFeatured),'EX',300000)   
         response.json(moviesFeatured)
 
     }
 
-    async cacheTrending({request,response}){
+    async cacheTrending({request,response,params}){
         const cachedTreding = await Redis.get('trending')
         if(cachedTreding){
             return JSON.parse(cachedTreding)
         }
 
-        let moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit('4');
+        let moviesTrend = await Database.table('movies').where('rating', 'like', '%7,%').limit(`${params.limit}`);
         moviesTrend = JSON.stringify(moviesTrend)
         await Redis.set('trending',JSON.stringify(moviesTrend),'EX',300000)   
         response.json(moviesTrend)
 
     }
 
-    async cachePopular({request,response}){
+    async cachePopular({request,response,params}){
         const cachedPopular = await Redis.get('popular')
         if(cachedPopular){
             return JSON.parse(cachedPopular)
         }
-        let moviesPop = await Database.table('movies').orderBy('views','asc').limit('4');
+        let moviesPop = await Database.table('movies').orderBy('views','asc').limit(`${params.limit}`);
         moviesPop = JSON.stringify(moviesPop)
         await Redis.set('popular',JSON.stringify(moviesPop),'EX',300000)   
         response.json(moviesPop)
