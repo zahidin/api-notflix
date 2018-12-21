@@ -2,6 +2,7 @@
 
 const Database = use('Database')
 const ModelUser = use('App/Models/Token')
+const ModelSubscription = use('App/Models/Subscription')
 const Hash = use('Hash')
 class UserController {
 
@@ -31,6 +32,21 @@ class UserController {
             response.json({success:false,message:"Password miss match"})
         }
         
+    }
+
+    async subscribe({request,response,auth}){
+        try{
+            const dataUser = auth.current.user
+            const subscribe = new ModelSubscription()
+            subscribe.id_user = dataUser.id
+            subscribe.email = dataUser.email
+            subscribe.id_movie = request.input('id_movie')
+            subscribe.category = request.input('category')
+            subscribe.save()
+            response.json({success:true,message:`Add subscribe ${request.input('movie')}`})
+        }catch(e){
+            response.json({success:false,message:e.message})
+        }
     }
 
 }

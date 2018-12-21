@@ -32,11 +32,34 @@ class MovieController {
     }
 
     async search({ request, response, params }) {
+        if(!request.input('offset')){
+            console.log('non offset')
+            let q = request.input('q')
+            let limit = request.input('limit')
+            const search = await Database
+                .table('movies')
+                .where('title', 'like', '%'+q+'%').limit(`${limit}`)
+    
+            response.json(search)    
+        }else{
+            console.log('offset')
+            let q = request.input('q')
+            let limit = request.input('limit')
+            let offset = request.input('offset')
+            const search = await Database
+                .table('movies')
+                .where('title', 'like', '%'+q+'%').offset(`${offset}`).limit(`${limit}`)
+            response.json(search)
+        }
+    }
+
+    async searchMore({ request, response, params }) {
         let q = request.input('q')
+        let limit = request.input('limit')
+        let offset = request.input('offset')
         const search = await Database
             .table('movies')
-            .where('title', 'like', '%'+q+'%')
-
+            .where('title', 'like', '%'+q+'%').offset(`${offset}`).limit(`${limit}`)
         response.json(search)
     }
 

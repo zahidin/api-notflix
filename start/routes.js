@@ -53,6 +53,7 @@ Route.group(() => {
     Route.get('islogged', 'UserController.isLoggin').as('checkLogin') 
     
     Route.post('profile/changepassword','UserController.changePassword').as('changePassword').middleware(['auth:jwt'])
+    Route.post('subscribe','UserController.subscribe').as('subscribe').middleware(['auth:jwt'])
 
     //Auth    
     Route.post('login', 'AuthController.login').as('login')
