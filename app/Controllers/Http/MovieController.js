@@ -46,9 +46,16 @@ class MovieController {
     }
 
     async movieCategory({request,response,params}){
+        const dataCached = await Redis.get('movieCategories')
+
+        if(dataCached){
+            return JSON.parse(dataCached)
+        }
         const dataMovieCategory = await Database.table('movies').where('genre',`${params.category}`).limit(`${params.limit}`)
+        await Redis.set('movieCategories',JSON.stringify(dataMovieCategory),'EX',300000)   
         response.json(dataMovieCategory)
     }
+
 
     async cache({request, response,params}){
         console.log(params.limit)
