@@ -8,7 +8,6 @@ class MovieController {
     async index({request,response}) {
 
         const movies = await Database.table('movies').select('*');
-        // const dataCategory = await Database.select('movies.*','categories.title as category_title','series.title as series_title').from('movies').innerJoin('categories','movies.category_id','categories.id').innerJoin('series','movies.series_id','series.id')
         response.json(movies)    
     }
 
@@ -26,41 +25,17 @@ class MovieController {
 
     async show({request, response, params}) {
 
-        // const dataCategory = await Database.select('movies.*','categories.title as category_title','series.title as series_title').from('movies').innerJoin('categories','movies.category_id','categories.id').innerJoin('series','movies.series_id','series.id').where('movies.id', params.id)
         const moviesId = await Database.table('movies').where('id',params.id);
         response.json(moviesId)
     }
 
     async search({ request, response, params }) {
-        if(!request.input('offset')){
-            console.log('non offset')
-            let q = request.input('q')
-            let limit = request.input('limit')
-            const search = await Database
-                .table('movies')
-                .where('title', 'like', '%'+q+'%').limit(`${limit}`)
-    
-            response.json(search)    
-        }else{
-            console.log('offset')
-            let q = request.input('q')
-            let limit = request.input('limit')
-            let offset = request.input('offset')
-            const search = await Database
-                .table('movies')
-                .where('title', 'like', '%'+q+'%').offset(`${offset}`).limit(`${limit}`)
-            response.json(search)
-        }
-    }
-
-    async searchMore({ request, response, params }) {
         let q = request.input('q')
-        let limit = request.input('limit')
-        let offset = request.input('offset')
+        let o = request.input('o') || 1
         const search = await Database
             .table('movies')
-            .where('title', 'like', '%'+q+'%').offset(`${offset}`).limit(`${limit}`)
-        response.json(search)
+            .where('title', 'like', '%'+q+'%').offset(parseInt(o)).limit(10)
+        response.json(search)    
     }
 
     async allCategory({request,response}){
@@ -83,12 +58,9 @@ class MovieController {
     async cache({request, response,params}){
         console.log(params.limit)
         const cachedMovies = await Redis.get('movies')
-        // const cachedMoviesTrending = await Redis.get('trending')
-        // const cachedMoviesPopular = await Redis.get('popular')
         if(cachedMovies){
             return JSON.parse(cachedMovies)
         }
-        // const movies = await Database.select('movies.*','categories.title as category_title','series.title as series_title').from('movies').innerJoin('categories','movies.category_id','categories.id').innerJoin('series','movies.series_id','series.id')
         let moviesFeatured = await Database.table('movies').where('rating', 'like', '%8,%').limit(`${params.limit}`)
         moviesFeatured = JSON.stringify(moviesFeatured)
         let moviesPop = await Database.table('movies').orderBy('views','asc').limit(`${params.limit}`);
@@ -97,10 +69,7 @@ class MovieController {
         moviesTrend = JSON.stringify(moviesTrend)
         const all = `{"featured":${moviesFeatured},"popular":${moviesPop},"trending":${moviesTrend}}`
 
-        // await Redis.set('movies',JSON.stringify(all),'EX',600000)   
         await Redis.set('movies',JSON.stringify(all),'EX',300000)   
-        // await Redis.set('popular',JSON.stringify(moviesPop))
-        // await Redis.set('trending',JSON.stringify(moviesTrend))
         response.json(all)
     }
 
